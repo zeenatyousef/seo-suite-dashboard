@@ -1,6 +1,7 @@
 # SEO Suite — Full-Stack Dashboard
 
 ## Project Structure
+<pre>
 seo-suite/
 ├── Backend/
 │   ├── app.py                  ← Flask API server (entry point)
@@ -22,7 +23,7 @@ seo-suite/
 ├── AuditPage.js     ← SEO Audit with desktop & mobile scores
 ├── ProposalPage.js  ← Freelance Proposal Generator
 └── HistoryPage.js   ← Search history log
-
+</pre>
 ---
 
 ## Setup — Backend
