@@ -187,7 +187,10 @@ ProposalPage.js
 - **Dark / Light Mode** — Fully themed UI
 
 ---
+## Dashboard UI
+<img width="1836" height="893" alt="image" src="https://github.com/user-attachments/assets/25812d17-08a7-4930-ba9e-22dfb849f06a" />
 
+---
 ## Production Deployment
 
 **Backend (Railway / Render):**
