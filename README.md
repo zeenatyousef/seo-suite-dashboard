@@ -92,7 +92,7 @@ npm start
 }
 ```
 
-### POST /api/proposal  ← (Asma's endpoint — integrate when ready)
+### POST /api/proposal 
 
 **Request:**
 ```json
@@ -114,7 +114,7 @@ npm start
 
 ---
 
-## Connecting Asma's Proposal API
+## Connecting Proposal API
 
 In `src/pages/ProposalPage.js`, find the `callProposalAPI` function and:
 
