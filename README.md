@@ -153,6 +153,7 @@ PAGESPEED_API_KEY=your_key_from_google_cloud_console
 ---
 
 ## How Frontend ↔ Backend Flow Works
+<pre>
 AuditPage.js
 └─ handleAudit()
 └─ seoApi.js → runAudit(url)
@@ -171,7 +172,7 @@ ProposalPage.js
 └─ proposal_generator.py
 ├─ _generate_proposal()  ← Groq Llama 3.3-70b
 └─ _vary_structure()     ← Rule-based post-processing
-
+</pre>
 ---
 
 ## Features
