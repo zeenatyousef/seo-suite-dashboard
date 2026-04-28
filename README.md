@@ -1,44 +1,45 @@
 # SEO Suite — Full-Stack Dashboard
 
 ## Project Structure
-
-```
 seo-suite/
-├── backend/
-│   ├── app.py           ← Flask API server (your entry point)
-│   ├── seo_audit.py     ←  audit engine 
+├── Backend/
+│   ├── app.py                  ← Flask API server (entry point)
+│   ├── seo_audit.py            ← SEO scraping + PageSpeed engine
+│   ├── proposal_generator.py   ← Groq-powered proposal generation
+│   ├── pdf_generator.py        ← ReportLab PDF report builder
 │   └── requirements.txt
-└── frontend/
-    ├── package.json
-    └── src/
-        ├── index.js
-        ├── App.js               ← Sidebar + routing
-        ├── api/
-        │   └── seoApi.js        ← All API fetch calls
-        ├── components/
-        │   └── index.js         ← Reusable UI (Badge, Card, etc.)
-        └── pages/
-            ├── AuditPage.js     ← Page 1: SEO Audit
-            └── ProposalPage.js  ← Page 2: Proposal Generator
-```
+└── Frontend/
+├── package.json
+└── src/
+├── index.js
+├── App.js               ← Sidebar + routing
+├── styles.css
+├── api/
+│   └── seoApi.js        ← All API fetch calls
+├── components/
+│   └── index.js         ← Reusable UI (Badge, Card, StatCard, etc.)
+└── pages/
+├── AuditPage.js     ← SEO Audit with desktop & mobile scores
+├── ProposalPage.js  ← Freelance Proposal Generator
+└── HistoryPage.js   ← Search history log
 
 ---
 
 ## Setup — Backend
 
 ```bash
-cd backend
+cd Backend
 
 # 1. Create virtualenv
 python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
+venv\Scripts\activate        # Mac/Linux: source venv/bin/activate
 
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Add your API keys in seo_audit.py
-#    GOOGLE_API_KEY = "..."
-#    GROQ_API_KEY   = "..."
+# 3. Create a .env file in the Backend folder
+#    GROQ_API_KEY=your_groq_api_key
+#    PAGESPEED_API_KEY=your_pagespeed_api_key
 
 # 4. Start the Flask server
 python app.py
@@ -50,13 +51,20 @@ python app.py
 ## Setup — Frontend
 
 ```bash
-cd frontend
+cd Frontend
 
 npm install
 npm start
 # → Opens http://localhost:3000
-# Create React App auto-proxies /api/* → localhost:5000
 ```
+
+---
+
+## Environment Variables
+
+Create a `.env` file inside the `Backend` folder:
+GROQ_API_KEY=your_key_from_console.groq.com
+PAGESPEED_API_KEY=your_key_from_google_cloud_console
 
 ---
 
@@ -73,89 +81,126 @@ npm start
 ```json
 {
   "url": "https://example.com",
-  "seo_data": {
+  "seo": {
     "title": "Example Domain",
     "meta_description": "...",
-    "missing_alt_count": 3,
     "h1_count": 1,
     "h2_count": 4,
-    "links": ["https://...", "..."]
+    "missing_alt_count": 3,
+    "broken_links_count": 0,
+    "word_count": 320,
+    "canonical_url": "https://example.com",
+    "schema_count": 1,
+    "internal_link_count": 12,
+    "external_link_count": 3
   },
-  "performance": {
-    "performance_score": 82,
-    "lcp": "2.1 s",
-    "cls": "0.02",
-    "tbt": "140 ms"
+  "desktop": {
+    "performance_score": 91,
+    "accessibility_score": 95,
+    "best_practices_score": 100,
+    "seo_score": 92,
+    "LCP": "1.1 s",
+    "CLS": "0.01",
+    "TBT": "120 ms",
+    "SI": "2.3 s"
   },
-  "broken_links": ["https://example.com/dead-link"],
-  "recommendations": "AI-generated recommendations from Groq..."
+  "mobile": {
+    "performance_score": 40,
+    "LCP": "4.2 s",
+    "CLS": "0.03",
+    "TBT": "870 ms",
+    "SI": "5.1 s"
+  },
+  "keywords": {
+    "rake_keywords": [{"phrase": "online courses", "score": 16.0}],
+    "top_words": [{"word": "skills", "count": 6}]
+  },
+  "ai_suggestions": "CRITICAL ISSUES\nIssue 1: ..."
 }
 ```
 
-### POST /api/proposal 
+---
+
+### POST /api/proposal
 
 **Request:**
 ```json
 {
-  "clientName": "Acme Corp",
-  "website": "https://acmecorp.com",
-  "industry": "E-commerce",
-  "budget": "1000-2500",
-  "goals": "Increase organic traffic by 50%",
-  "painPoints": "Low rankings, slow speed",
-  "timeline": "6 months"
+  "requirement": "I need a React developer...",
+  "budget": "$500",
+  "platform": "upwork",
+  "tone": "confident",
+  "industry": "tech",
+  "name": "Sara",
+  "humanize": true
 }
 ```
 
 **Response:**
 ```json
-{ "proposal": "Full proposal text..." }
+{ "proposal": "SHORT PROPOSAL:\n...\n\nDETAILED PROPOSAL:\n..." }
 ```
 
 ---
 
-## Connecting Proposal API
+### POST /api/audit/pdf
 
-In `src/pages/ProposalPage.js`, find the `callProposalAPI` function and:
+**Request:** Full audit JSON (same as audit response above)
 
-1. **Uncomment** the `fetch()` block
-2. **Remove** the offline fallback `generateLocally()` call
-3. Set `REACT_APP_API_URL` in a `.env` file if backend is on a different host:
-
-```
-REACT_APP_API_URL=https://your-backend.com
-```
+**Response:** PDF file download
 
 ---
 
 ## How Frontend ↔ Backend Flow Works
-
-```
 AuditPage.js
-  └─ handleAudit()
-       └─ seoApi.js → runAudit(url)
-            └─ POST /api/audit
-                 └─ app.py → run_seo_audit(url)
-                      ├─ scrape_website()
-                      ├─ get_pagespeed_data()
-                      ├─ check_broken_links()
-                      └─ generate_recommendations()  ← Groq AI
-                           └─ JSON response
-                                └─ parseResult() → renders UI
-```
+└─ handleAudit()
+└─ seoApi.js → runAudit(url)
+└─ POST /api/audit
+└─ app.py → run_seo_audit(url)
+├─ scrape_seo()           ← BeautifulSoup + Cloudscraper
+├─ extract_keywords()     ← RAKE-NLTK
+├─ get_pagespeed()        ← Desktop + Mobile in parallel
+└─ get_ai_suggestions()  ← Groq Llama 3
+└─ JSON response
+└─ renders UI cards, charts, tables
+ProposalPage.js
+└─ handleGenerate()
+└─ seoApi.js → generateProposal(form)
+└─ POST /api/proposal
+└─ proposal_generator.py
+├─ _generate_proposal()  ← Groq Llama 3.3-70b
+└─ _vary_structure()     ← Rule-based post-processing
+
+---
+
+## Features
+
+- **SEO Audit** — Scrapes any website, analyzes title, meta, headings, images, links
+- **Desktop & Mobile PageSpeed** — Fetches both strategies simultaneously
+- **AI Recommendations** — Sectioned output with Critical Issues, Fixes, Optimized Title/Meta
+- **Keyword Analysis** — RAKE keyword extraction + word frequency tables
+- **Proposal Generator** — Short + Detailed proposals for Upwork, Fiverr, LinkedIn and more
+- **PDF Report** — Professional report with bar chart, score circle, keyword tables, highlighted AI sections
+- **Search History** — Saves audited URLs, supports one-click re-audit
+- **Dark / Light Mode** — Fully themed UI
 
 ---
 
 ## Production Deployment
 
-**Backend (e.g. Railway / Render):**
+**Backend (Railway / Render):**
 ```bash
 pip install gunicorn
 gunicorn app:app --bind 0.0.0.0:$PORT
 ```
 
-**Frontend (e.g. Vercel / Netlify):**
+**Frontend (Vercel / Netlify):**
 ```bash
 npm run build
 # Set env var: REACT_APP_API_URL=https://your-deployed-backend.com
 ```
+
+---
+
+## Developed By
+Zeenat, Vishaqa and Asma — Internship Project @ Pseb Punjab
