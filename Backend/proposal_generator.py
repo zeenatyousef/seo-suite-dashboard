@@ -1,4 +1,4 @@
-# proposal_generator.py — Asma's Final Proposal Generator
+# proposal_generator.py 
 import os
 import time
 from groq import Groq
@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# ── Config maps (Asma's final version) ───────────────────────
+# ── Config maps ────────────────────
 TONE_MAP = {
     'formal':    'Professional, structured, polite, business tone.',
     'friendly':  'Warm, conversational, slightly casual tone that builds rapport.',
