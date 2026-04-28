@@ -1,0 +1,8 @@
+Backend/__pycache__/
+Backend/*.pyc
+Backend/.env
+Backend/venv/
+Frontend/node_modules/
+Frontend/build/
+.DS_Store
+*.log
