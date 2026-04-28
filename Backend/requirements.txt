@@ -1,0 +1,10 @@
+flask
+flask-cors
+requests
+cloudscraper
+beautifulsoup4
+groq
+reportlab
+python-dotenv
+rake-nltk
+nltk
