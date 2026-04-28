@@ -1,0 +1,115 @@
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── DARK THEME ──────────────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+  --bg:           #0f1117;
+  --surface:      #1a1d27;
+  --surface2:     #222536;
+  --border:       #2e3147;
+  --border2:      #3d4168;
+  --text:         #e8eaf6;
+  --text2:        #9094b8;
+  --text3:        #5a5f82;
+  --accent:       #6c63ff;
+  --accent-dim:   rgba(108,99,255,0.15);
+  --green:        #4ade80;
+  --yellow:       #fbbf24;
+  --red:          #f87171;
+  --green-bg:     rgba(74,222,128,0.1);
+  --yellow-bg:    rgba(251,191,36,0.1);
+  --red-bg:       rgba(248,113,113,0.1);
+  --input-bg:     #222536;
+  --input-text:   #e8eaf6;
+  --placeholder:  #5a5f82;
+}
+
+/* ── LIGHT THEME ─────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg:           #f4f5fb;
+  --surface:      #ffffff;
+  --surface2:     #eef0f8;
+  --border:       #dde0f0;
+  --border2:      #c5c9e0;
+  --text:         #1a1c2e;
+  --text2:        #4a4f72;
+  --text3:        #8b90b8;
+  --accent:       #5b54e8;
+  --accent-dim:   rgba(91,84,232,0.1);
+  --green:        #16a34a;
+  --yellow:       #d97706;
+  --red:          #dc2626;
+  --green-bg:     rgba(22,163,74,0.1);
+  --yellow-bg:    rgba(217,119,6,0.1);
+  --red-bg:       rgba(220,38,38,0.1);
+  --input-bg:     #eef0f8;
+  --input-text:   #1a1c2e;
+  --placeholder:  #8b90b8;
+}
+
+/* ── Base ────────────────────────────────────────────────── */
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
+}
+
+input, textarea, select, button { font-family: inherit; }
+
+/* ── Inputs use CSS variables so light mode works ─────────── */
+input, textarea, select {
+  background: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--border) !important;
+  transition: background 0.3s, color 0.3s, border-color 0.2s;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--placeholder) !important;
+  opacity: 1;
+}
+
+select option {
+  background: var(--input-bg);
+  color: var(--input-text);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--accent-dim) !important;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes spin   { to { transform: rotate(360deg); } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar-desktop { display: none !important; }
+  .topbar          { display: flex !important; }
+  .page-content    { padding: 1.25rem 1rem !important; }
+}
+@media (min-width: 769px) {
+  .topbar          { display: none !important; }
+  .sidebar-desktop { display: flex !important; }
+}
+@media (max-width: 640px) {
+  .stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .two-col    { grid-template-columns: 1fr !important; }
+  .three-col  { grid-template-columns: 1fr 1fr !important; }
+}
+@media (max-width: 420px) {
+  .stats-grid { grid-template-columns: 1fr !important; }
+  .three-col  { grid-template-columns: 1fr !important; }
+}
