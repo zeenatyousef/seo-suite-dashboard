@@ -6,7 +6,7 @@
 seo-suite/
 ├── backend/
 │   ├── app.py           ← Flask API server (your entry point)
-│   ├── seo_audit.py     ← Vishaqa's audit engine (unchanged)
+│   ├── seo_audit.py     ←  audit engine 
 │   └── requirements.txt
 └── frontend/
     ├── package.json
