@@ -1,4 +1,4 @@
-# seo_audit.py — Vishaqa's Updated SEO Engine
+# seo_audit.py —  SEO Engine
 # New: cloudscraper, RAKE keywords, canonical, robots, OG tags,
 #      schema detection, internal/external links, word count,
 #      accessibility/best-practices/SEO scores from PageSpeed
